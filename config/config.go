@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
@@ -9,6 +10,9 @@ import (
 
 var (
 	Port = 3406
+
+	DBDriver = ""
+	DBUrl    = ""
 )
 
 func Load() {
@@ -18,6 +22,7 @@ func Load() {
 	}
 
 	loadPortFromEnv()
+	loadDBDetailsFromEnv()
 }
 
 func loadPortFromEnv() {
@@ -31,4 +36,9 @@ func loadPortFromEnv() {
 	} else {
 		log.Printf("'API_PORT' variable is not set on environment. Setting port to '%d'.", Port)
 	}
+}
+func loadDBDetailsFromEnv() {
+	DBDriver = os.Getenv("DB_DRIVER")
+	DBUrl = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_NAME"), os.Getenv("DB_PASS"))
 }
