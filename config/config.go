@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"strconv"
@@ -11,6 +12,11 @@ var (
 )
 
 func Load() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalln("Loading '.env' file has been failed:", err)
+	}
+
 	loadPortFromEnv()
 }
 
