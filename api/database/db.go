@@ -1,7 +1,8 @@
-package db
+package database
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/spootrick/survi/config"
 )
 
