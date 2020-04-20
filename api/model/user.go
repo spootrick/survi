@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"github.com/spootrick/survi/api/security"
+	"time"
+)
 
 type User struct {
 	ID        uint      `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id"`
@@ -11,4 +14,13 @@ type User struct {
 	Roles     string    `gorm:"size:50;NOT NULL;default:'ROLE_USER'" json:"roles"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+}
+
+func (u *User) BeforeSave() error {
+	hashedPassword, err := security.Hash(u.Password)
+	if err != nil {
+		return err
+	}
+	u.Password = string(hashedPassword)
+	return nil
 }
