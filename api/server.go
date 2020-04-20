@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"github.com/spootrick/survi/api/router"
 	"github.com/spootrick/survi/config"
+	"github.com/spootrick/survi/seed"
 	"log"
 	"net/http"
 )
 
 func Run() {
 	config.Load()
+	seed.Load() // seed dummy values to database
+
 	listen(config.Port)
 }
 
