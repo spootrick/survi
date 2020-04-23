@@ -1,6 +1,7 @@
 package crud
 
 import (
+	"errors"
 	"github.com/jinzhu/gorm"
 	"github.com/spootrick/survi/api/model"
 	"github.com/spootrick/survi/api/util/channel"
@@ -49,4 +50,25 @@ func (r *repositoryUserCRUD) FindAll() ([]model.User, error) {
 		return users, nil
 	}
 	return nil, err
+}
+
+func (r *repositoryUserCRUD) FindById(id uint) (model.User, error) {
+	var err error
+	var user model.User
+	done := make(chan bool)
+	go func(ch chan<- bool) {
+		err = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&user).Error
+		if err != nil {
+			ch <- false
+			return
+		}
+		ch <- true
+	}(done)
+	if channel.Ok(done) {
+		return user, nil
+	}
+	if gorm.IsRecordNotFoundError(err) {
+		return model.User{}, errors.New("user not found")
+	}
+	return model.User{}, err
 }

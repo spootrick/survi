@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/spootrick/survi/api/database"
 	"github.com/spootrick/survi/api/model"
 	"github.com/spootrick/survi/api/response"
@@ -10,6 +11,7 @@ import (
 	"github.com/spootrick/survi/repository/crud"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +67,29 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("get a user"))
+	vars := mux.Vars(r)
+	userId, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryUserCRUD(db)
+
+	func(userRepository repository.UserRepository) {
+		user, err := userRepository.FindById(uint(userId))
+		if err != nil {
+			response.ERROR(w, http.StatusBadRequest, err)
+			return
+		}
+		response.JSON(w, http.StatusOK, user)
+	}(repo)
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
