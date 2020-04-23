@@ -12,4 +12,10 @@ var users = []model.User{
 		Password:  "123456",
 		Roles:     "ROLE_ADMIN,ROLE_USER",
 	},
+	{
+		FirstName: "John",
+		LastName:  "Doe",
+		Email:     "john@doe.com",
+		Password:  "p4ssw0rd",
+	},
 }
