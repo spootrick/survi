@@ -87,7 +87,7 @@ func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
 			FirstName: user.FirstName,
 			LastName:  user.LastName,
 			Email:     user.Email,
-			Password:  user.Password, // TODO: hash password
+			Password:  user.Password,
 			UpdatedAt: time.Time{},
 		},
 		)

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/spootrick/survi/api/security"
 	"time"
 )
@@ -16,11 +17,20 @@ type User struct {
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-func (u *User) BeforeSave() error {
-	hashedPassword, err := security.Hash(u.Password)
+// BeforeSave hash the user password before save
+func (u *User) BeforeSave(scope *gorm.Scope) error {
+	return hashPassword(scope, u)
+}
+
+// BeforeUpdate hash the user password before update
+func (u *User) BeforeUpdate(scope *gorm.Scope) error {
+	return hashPassword(scope, u)
+}
+
+func hashPassword(scope *gorm.Scope, user *User) error {
+	hashedPassword, err := security.Hash(user.Password)
 	if err != nil {
 		return err
 	}
-	u.Password = string(hashedPassword)
-	return nil
+	return scope.SetColumn("password", hashedPassword)
 }
