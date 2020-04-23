@@ -30,6 +30,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		response.JSON(w, http.StatusOK, users)
 	}(repo)
 }
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -62,12 +63,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		response.JSON(w, http.StatusCreated, user)
 	}(repo)
 }
+
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("get a user"))
 }
+
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("update user"))
 }
+
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("delete user"))
 }
