@@ -20,6 +20,7 @@ func (r *repositoryUserCRUD) Save(user model.User) (model.User, error) {
 	var err error
 	done := make(chan bool)
 	go func(ch chan<- bool) {
+		defer close(ch)
 		err = r.db.Debug().Model(&model.User{}).Create(&user).Error
 		if err != nil {
 			ch <- false
@@ -39,6 +40,7 @@ func (r *repositoryUserCRUD) FindAll() ([]model.User, error) {
 	var users []model.User
 	done := make(chan bool)
 	go func(ch chan<- bool) {
+		defer close(ch)
 		err = r.db.Debug().Model(&model.User{}).Limit(100).Find(&users).Error
 		if err != nil {
 			ch <- false
@@ -58,6 +60,7 @@ func (r *repositoryUserCRUD) FindById(id uint) (model.User, error) {
 	var user model.User
 	done := make(chan bool)
 	go func(ch chan<- bool) {
+		defer close(ch)
 		err = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&user).Error
 		if err != nil {
 			ch <- false
