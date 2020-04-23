@@ -93,7 +93,42 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("update user"))
+	vars := mux.Vars(r)
+	userId, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	user := model.User{}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryUserCRUD(db)
+
+	func(userRepository repository.UserRepository) {
+		rows, err := userRepository.Update(uint(userId), user)
+		if err != nil {
+			response.ERROR(w, http.StatusBadRequest, err)
+			return
+		}
+		response.JSON(w, http.StatusOK, rows)
+	}(repo)
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {

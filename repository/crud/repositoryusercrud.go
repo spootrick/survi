@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/spootrick/survi/api/model"
 	"github.com/spootrick/survi/api/util/channel"
+	"time"
 )
 
 type repositoryUserCRUD struct {
@@ -71,4 +72,28 @@ func (r *repositoryUserCRUD) FindById(id uint) (model.User, error) {
 		return model.User{}, errors.New("user not found")
 	}
 	return model.User{}, err
+}
+
+func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
+	var rs *gorm.DB
+	done := make(chan bool)
+	go func(ch chan<- bool) {
+		defer close(ch)
+		rs = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).UpdateColumns(
+			map[string]interface{}{
+				"first_name": user.FirstName,
+				"last_name":  user.LastName,
+				"email":      user.Email,
+				"password":   user.Password,
+				"updated_at": time.Now(),
+			},
+		)
+		ch <- true
+	}(done)
+	if channel.Ok(done) {
+		if rs.Error != nil {
+			return 0, rs.Error
+		}
+	}
+	return 0, rs.Error
 }
