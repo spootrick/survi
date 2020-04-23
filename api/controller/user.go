@@ -1,12 +1,51 @@
 package controller
 
-import "net/http"
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/spootrick/survi/api/database"
+	"github.com/spootrick/survi/api/model"
+	"github.com/spootrick/survi/api/response"
+	"github.com/spootrick/survi/repository"
+	"github.com/spootrick/survi/repository/crud"
+	"io/ioutil"
+	"net/http"
+)
 
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("listing all users"))
 }
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("create user"))
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		response.JSON(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	user := model.User{}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryUserCRUD(db)
+
+	func(userRepository repository.UserRepository) {
+		user, err := userRepository.Save(user)
+		if err != nil {
+			response.ERROR(w, http.StatusUnprocessableEntity, err)
+			return
+		}
+		w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, user.ID))
+		response.JSON(w, http.StatusCreated, user)
+	}(repo)
 }
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("get a user"))
