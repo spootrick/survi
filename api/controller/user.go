@@ -132,5 +132,28 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("delete user"))
+	vars := mux.Vars(r)
+	userId, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryUserCRUD(db)
+
+	func(userRepository repository.UserRepository) {
+		_, err := userRepository.Delete(uint(userId))
+		if err != nil {
+			response.ERROR(w, http.StatusBadRequest, err)
+			return
+		}
+		w.Header().Set("Entity", fmt.Sprintf("%d", userId))
+		response.JSON(w, http.StatusNoContent, "")
+	}(repo)
 }

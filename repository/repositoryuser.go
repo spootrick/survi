@@ -7,5 +7,5 @@ type UserRepository interface {
 	FindAll() ([]model.User, error)
 	FindById(uint) (model.User, error)
 	Update(uint, model.User) (int64, error)
-	//Delete(uint) (int64, error)
+	Delete(uint) (int64, error)
 }
