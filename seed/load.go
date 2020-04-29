@@ -14,7 +14,7 @@ func Load() {
 	}
 	defer db.Close()
 
-	err = db.Debug().DropTableIfExists(&model.User{}, &model.UserDetail{}).Error
+	err = db.Debug().DropTableIfExists(&model.UserDetail{}, &model.User{}).Error
 	if err != nil {
 		log.Fatal("error dropping table in seed.Load():", err)
 	}
