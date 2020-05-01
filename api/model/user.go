@@ -9,14 +9,16 @@ import (
 )
 
 type User struct {
-	ID        uint      `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id"`
-	FirstName string    `gorm:"size:50;NOT NULL" json:"first_name"`
-	LastName  string    `gorm:"size:50;NOT NULL" json:"last_name"`
-	Email     string    `gorm:"size:50;NOT NULL;unique;unique_index" json:"email"`
-	Password  string    `gorm:"size:100;NOT NULL" json:"password"`
-	Roles     string    `gorm:"size:50;NOT NULL;default:'ROLE_USER'" json:"roles"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID         uint      `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id"`
+	FirstName  string    `gorm:"size:50;NOT NULL" json:"first_name"`
+	LastName   string    `gorm:"size:50;NOT NULL" json:"last_name"`
+	Email      string    `gorm:"size:50;NOT NULL;unique;unique_index" json:"email"`
+	Password   string    `gorm:"size:100;NOT NULL" json:"password"`
+	Roles      string    `gorm:"size:50;NOT NULL;default:'ROLE_USER'" json:"roles"`
+	IsVerified bool      `gorm:"default:false" json:"is_verified"` // e-mail verification
+	IsActive   bool      `gorm:"default:false" json:"is_active"`   // account is active or not
+	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 // BeforeSave hash the user password before save
@@ -43,6 +45,8 @@ func (u *User) Prepare() {
 	u.LastName = util.EscapeHTMLAndTrimString(u.LastName)
 	u.Email = util.EscapeHTMLAndTrimString(u.Email)
 	u.Roles = util.EscapeHTMLAndTrimString(u.Roles)
+	u.IsVerified = false
+	u.IsActive = true
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
 }
