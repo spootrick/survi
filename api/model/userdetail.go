@@ -39,7 +39,9 @@ func (d *UserDetail) Verify() error {
 		return errors.New("user is required")
 	}
 
-	// TODO: Find a way to check birth date
+	if d.BirthDate.After(time.Now()) {
+		return errors.New("birth date is required")
+	}
 
 	if d.Gender == "" {
 		return errors.New("gender is required")
