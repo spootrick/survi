@@ -43,6 +43,8 @@ func (d *UserDetail) Verify() error {
 
 	if d.Gender == "" {
 		return errors.New("gender is required")
+	} else if len(d.Gender) > 6 {
+		return errors.New("gender character length exceeded")
 	}
 
 	if d.Location == "" {
