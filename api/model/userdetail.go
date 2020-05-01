@@ -57,7 +57,7 @@ func (d *UserDetail) Validate() error {
 		return errors.New("weight must be positive")
 	}
 
-	if d.Phone <= 0 || d.Phone > 5999999999 {
+	if d.Phone <= 5000000000 || d.Phone > 5999999999 {
 		return errors.New("invalid phone number")
 	}
 
