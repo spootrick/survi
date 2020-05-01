@@ -9,7 +9,7 @@ var userDetailRoutes = []Route{
 	{
 		URI:     "/users/{id}/details",
 		Method:  http.MethodGet,
-		Handler: nil,
+		Handler: controller.GetUserDetail,
 	},
 	{
 		URI:     "/users/details",
