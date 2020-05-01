@@ -7,17 +7,21 @@ import (
 
 var users = []model.User{
 	{
-		FirstName: "Furkan",
-		LastName:  "Karakoyunlu",
-		Email:     "furkan@karakoyunlu.com",
-		Password:  "123456",
-		Roles:     "ROLE_ADMIN,ROLE_USER",
+		FirstName:  "Furkan",
+		LastName:   "Karakoyunlu",
+		Email:      "furkan@karakoyunlu.com",
+		Password:   "123456",
+		Roles:      "ROLE_ADMIN,ROLE_USER",
+		IsVerified: true,
+		IsActive:   true,
 	},
 	{
-		FirstName: "John",
-		LastName:  "Doe",
-		Email:     "john@doe.com",
-		Password:  "p4ssw0rd",
+		FirstName:  "John",
+		LastName:   "Doe",
+		Email:      "john@doe.com",
+		Password:   "p4ssw0rd",
+		IsVerified: false,
+		IsActive:   true,
 	},
 }
 
