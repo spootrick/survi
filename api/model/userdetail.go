@@ -34,7 +34,7 @@ func (d *UserDetail) Prepare() {
 	d.UpdatedAt = time.Now()
 }
 
-func (d *UserDetail) Validate() error {
+func (d *UserDetail) Verify() error {
 	if d.UserID < 1 {
 		return errors.New("user is required")
 	}
