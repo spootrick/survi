@@ -11,7 +11,7 @@ var users = []model.User{
 		LastName:   "Karakoyunlu",
 		Email:      "furkan@karakoyunlu.com",
 		Password:   "123456",
-		Roles:      "ROLE_ADMIN,ROLE_USER",
+		Role:       "ROLE_ADMIN,ROLE_USER",
 		IsVerified: true,
 		IsActive:   true,
 	},
