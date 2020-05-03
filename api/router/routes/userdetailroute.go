@@ -7,23 +7,27 @@ import (
 
 var userDetailRoutes = []Route{
 	{
-		URI:     "/users/{id}/details",
-		Method:  http.MethodGet,
-		Handler: controller.GetUserDetail,
+		URI:          "/users/{id}/details",
+		Method:       http.MethodGet,
+		Handler:      controller.GetUserDetail,
+		AuthRequired: true,
 	},
 	{
-		URI:     "/users/details",
-		Method:  http.MethodPost,
-		Handler: controller.CreateUserDetail,
+		URI:          "/users/details",
+		Method:       http.MethodPost,
+		Handler:      controller.CreateUserDetail,
+		AuthRequired: true,
 	},
 	{
-		URI:     "/users/{id}/details",
-		Method:  http.MethodPut,
-		Handler: controller.UpdateUserDetail,
+		URI:          "/users/{id}/details",
+		Method:       http.MethodPut,
+		Handler:      controller.UpdateUserDetail,
+		AuthRequired: true,
 	},
 	{
-		URI:     "/users/{id}/details",
-		Method:  http.MethodDelete,
-		Handler: nil,
+		URI:          "/users/{id}/details",
+		Method:       http.MethodDelete,
+		Handler:      nil,
+		AuthRequired: true,
 	},
 }

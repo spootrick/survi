@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	Port = 3406
+	Port      = 3406
+	SecretKey []byte
 
 	DBDriver = ""
 	DBUrl    = ""
@@ -23,6 +24,8 @@ func Load() {
 
 	loadPortFromEnv()
 	loadDBDetailsFromEnv()
+
+	SecretKey = []byte(os.Getenv("API_SECRET"))
 }
 
 func loadPortFromEnv() {
@@ -37,6 +40,7 @@ func loadPortFromEnv() {
 		log.Printf("'API_PORT' variable is not set on environment. Setting port to '%d'.", Port)
 	}
 }
+
 func loadDBDetailsFromEnv() {
 	DBDriver = os.Getenv("DB_DRIVER")
 	DBUrl = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", os.Getenv("DB_HOST"),

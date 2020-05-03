@@ -65,6 +65,7 @@ func (u *User) Verify(action Action) error {
 	case Update:
 		// TODO: make a map for each case with fields and error messages and send this map to a method that verifies
 		// given elements of map
+		// TODO: or use a validator https://github.com/go-playground/validator
 		if u.FirstName == "" {
 			return errors.New("first name is required")
 		}
@@ -81,7 +82,17 @@ func (u *User) Verify(action Action) error {
 			return errors.New("invalid e-mail")
 		}
 	case Login:
+		if u.Email == "" {
+			return errors.New("e-mail is required")
+		}
 
+		if !util.VerifyEmailFormat(u.Email) {
+			return errors.New("invalid e-mail")
+		}
+
+		if u.Password == "" {
+			return errors.New("password is required")
+		}
 	default:
 		if u.FirstName == "" {
 			return errors.New("first name is required")
