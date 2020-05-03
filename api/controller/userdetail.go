@@ -79,3 +79,42 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 		response.JSON(w, http.StatusOK, userDetail)
 	}(repo)
 }
+
+func UpdateUserDetail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	userDetail := model.UserDetail{}
+	err = json.Unmarshal(body, &userDetail)
+	if err != nil {
+		response.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	repo := crud.NewRepositoryUserDetailsCRUD(db)
+
+	func(userDetailsRepository repository.UserDetailRepository) {
+		rows, err := userDetailsRepository.Update(uint(userId), userDetail)
+		if err != nil {
+			response.ERROR(w, http.StatusBadRequest, err)
+			return
+		}
+		response.JSON(w, http.StatusOK, rows)
+	}(repo)
+}

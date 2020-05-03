@@ -19,7 +19,7 @@ var userDetailRoutes = []Route{
 	{
 		URI:     "/users/{id}/details",
 		Method:  http.MethodPut,
-		Handler: nil,
+		Handler: controller.UpdateUserDetail,
 	},
 	{
 		URI:     "/users/{id}/details",
