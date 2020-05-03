@@ -12,12 +12,12 @@ type UserDetail struct {
 	UserID     uint      `gorm:"unique;NOT NULL" json:"user_id"`
 	BirthDate  time.Time `gorm:"type:DATE NOT NULL" json:"birth_date"`
 	Gender     string    `gorm:"size:6;NOT NULL" json:"gender"`
-	Profession string    `gorm:"size:100;" json:"profession;omitempty"`
+	Profession string    `gorm:"size:100;" json:"profession,omitempty"`
 	Location   string    `gorm:"size:100;NOT NULL" json:"location"`
 	Height     uint      `gorm:"NOT NULL" json:"height"`
 	Weight     uint      `gorm:"NOT NULL" json:"weight"`
 	Phone      uint64    `gorm:"NOT NULL" json:"phone"`
-	Instagram  string    `gorm:"size:30" json:"instagram;omitempty"`
+	Instagram  string    `gorm:"size:30" json:"instagram,omitempty"`
 	IsPregnant bool      `gorm:"default:false;NOT NULL" json:"is_pregnant"`
 	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
