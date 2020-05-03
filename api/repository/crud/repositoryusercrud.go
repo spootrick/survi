@@ -78,11 +78,11 @@ func (r *repositoryUserCRUD) FindById(id uint) (model.User, error) {
 }
 
 func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
-	var rs *gorm.DB
+	var result *gorm.DB
 	done := make(chan bool)
 	go func(ch chan<- bool) {
 		defer close(ch)
-		rs = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).Updates(model.User{
+		result = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).Updates(model.User{
 			// updates only update non null fields
 			FirstName: user.FirstName,
 			LastName:  user.LastName,
@@ -94,30 +94,32 @@ func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
 		ch <- true
 	}(done)
 	if channel.Ok(done) {
-		if rs.Error != nil {
-			return 0, rs.Error
+		if result.Error != nil {
+			return 0, result.Error
 		}
-		return rs.RowsAffected, nil
+		return result.RowsAffected, nil
 	}
-	return 0, rs.Error
+	return 0, result.Error
 }
 
 func (r *repositoryUserCRUD) Delete(id uint) (int64, error) {
-	var rs *gorm.DB
+	var result *gorm.DB
 	done := make(chan bool)
 	go func(ch chan<- bool) {
 		defer close(ch)
-		rs = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).UpdateColumns(
+		// delete the record from DB
+		// result = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).Delete(model.User{})
+		result = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).UpdateColumns(
 			map[string]interface{}{
 				"is_active": false,
 			})
 		ch <- true
 	}(done)
 	if channel.Ok(done) {
-		if rs.Error != nil {
-			return 0, rs.Error
+		if result.Error != nil {
+			return 0, result.Error
 		}
-		return rs.RowsAffected, nil
+		return result.RowsAffected, nil
 	}
-	return 0, rs.Error
+	return 0, result.Error
 }

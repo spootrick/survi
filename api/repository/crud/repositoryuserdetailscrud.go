@@ -63,11 +63,11 @@ func (d *repositoryUserDetailsCRUD) FindById(userId uint) (model.UserDetail, err
 }
 
 func (d *repositoryUserDetailsCRUD) Update(userId uint, userDetail model.UserDetail) (int64, error) {
-	var rs *gorm.DB
+	var result *gorm.DB
 	done := make(chan bool)
 	go func(ch chan<- bool) {
 		defer close(ch)
-		rs = d.db.Debug().Model(&model.UserDetail{}).Where("user_id = ?", userId).Take(&model.UserDetail{}).Updates(model.UserDetail{
+		result = d.db.Debug().Model(&model.UserDetail{}).Where("user_id = ?", userId).Take(&model.UserDetail{}).Updates(model.UserDetail{
 			BirthDate:  userDetail.BirthDate,
 			Gender:     userDetail.Gender,
 			Profession: userDetail.Profession,
@@ -83,13 +83,13 @@ func (d *repositoryUserDetailsCRUD) Update(userId uint, userDetail model.UserDet
 		ch <- true
 	}(done)
 	if channel.Ok(done) {
-		if rs.Error != nil {
-			if gorm.IsRecordNotFoundError(rs.Error) {
+		if result.Error != nil {
+			if gorm.IsRecordNotFoundError(result.Error) {
 				return 0, errors.New("user detail not found")
 			}
-			return 0, rs.Error
+			return 0, result.Error
 		}
-		return rs.RowsAffected, nil
+		return result.RowsAffected, nil
 	}
-	return 0, rs.Error
+	return 0, result.Error
 }
