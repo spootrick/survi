@@ -83,7 +83,7 @@ func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
 	go func(ch chan<- bool) {
 		defer close(ch)
 		result = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).Updates(model.User{
-			// updates only update non null fields
+			// updates only update non null fields when using structs
 			FirstName: user.FirstName,
 			LastName:  user.LastName,
 			Email:     user.Email,
