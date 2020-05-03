@@ -40,6 +40,7 @@ func CreateUserDetail(w http.ResponseWriter, r *http.Request) {
 		response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
+	defer db.Close()
 
 	repo := crud.NewRepositoryUserDetailsCRUD(db)
 
@@ -67,6 +68,7 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 		response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
+	defer db.Close()
 
 	repo := crud.NewRepositoryUserDetailsCRUD(db)
 
@@ -106,6 +108,7 @@ func UpdateUserDetail(w http.ResponseWriter, r *http.Request) {
 		response.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
+	defer db.Close()
 
 	repo := crud.NewRepositoryUserDetailsCRUD(db)
 
