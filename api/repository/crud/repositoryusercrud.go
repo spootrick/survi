@@ -107,13 +107,17 @@ func (r *repositoryUserCRUD) Delete(id uint) (int64, error) {
 	done := make(chan bool)
 	go func(ch chan<- bool) {
 		defer close(ch)
-		rs = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).Delete(model.User{})
+		rs = r.db.Debug().Model(&model.User{}).Where("id = ?", id).Take(&model.User{}).UpdateColumns(
+			map[string]interface{}{
+				"is_active": false,
+			})
 		ch <- true
 	}(done)
 	if channel.Ok(done) {
 		if rs.Error != nil {
 			return 0, rs.Error
 		}
+		return rs.RowsAffected, nil
 	}
 	return 0, rs.Error
 }
