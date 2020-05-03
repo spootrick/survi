@@ -75,11 +75,18 @@ func (d *repositoryUserDetailsCRUD) Update(userId uint, userDetail model.UserDet
 			Height:     userDetail.Height,
 			Weight:     userDetail.Weight,
 			Phone:      userDetail.Phone,
-			Instagram:  userDetail.Instagram,
-			IsPregnant: userDetail.IsPregnant,
 			UpdatedAt:  time.Now(),
-		},
-		)
+		})
+
+		// since gorm ignores default values in structs, I have to handle is_pregnant and instagram (nullable values)
+		result = d.db.Debug().Model(&model.UserDetail{}).Where("user_id = ?", userId).Take(&model.UserDetail{}).
+			UpdateColumns(
+				map[string]interface{}{
+					"instagram":   userDetail.Instagram,
+					"is_pregnant": userDetail.IsPregnant,
+				},
+			)
+
 		ch <- true
 	}(done)
 	if channel.Ok(done) {
