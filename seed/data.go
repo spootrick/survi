@@ -2,6 +2,7 @@ package seed
 
 import (
 	"github.com/spootrick/survi/api/model"
+	"github.com/spootrick/survi/api/util"
 	"time"
 )
 
@@ -29,23 +30,23 @@ var userDetails = []model.UserDetail{
 	{
 		BirthDate:  time.Now(),
 		Gender:     "male",
-		Profession: "Computer Engineer",
+		Profession: util.StrPtr("Computer Engineer"),
 		Location:   "Istanbul",
 		Height:     180,
 		Weight:     74,
 		Phone:      5375600268,
-		Instagram:  "spootrick",
-		IsPregnant: false,
+		Instagram:  util.StrPtr("spootrick"),
+		IsPregnant: util.BoolPtr(false),
 	},
 	{
 		BirthDate:  time.Now(),
 		Gender:     "male",
-		Profession: "Dummy Prof",
+		Profession: util.StrPtr("Dummy Prof"),
 		Location:   "New York",
 		Height:     178,
 		Weight:     75,
 		Phone:      5493857383,
-		Instagram:  "johndoe",
-		IsPregnant: true,
+		Instagram:  util.StrPtr("johndoe"),
+		IsPregnant: util.BoolPtr(true),
 	},
 }
