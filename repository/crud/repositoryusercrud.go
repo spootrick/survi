@@ -97,6 +97,7 @@ func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
 		if rs.Error != nil {
 			return 0, rs.Error
 		}
+		return rs.RowsAffected, nil
 	}
 	return 0, rs.Error
 }
