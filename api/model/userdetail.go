@@ -18,7 +18,7 @@ type UserDetail struct {
 	Weight     uint      `gorm:"NOT NULL" json:"weight"`
 	Phone      uint64    `gorm:"NOT NULL" json:"phone"`
 	Instagram  string    `gorm:"size:30" json:"instagram;omitempty"`
-	IsPregnant bool      `gorm:"NOT NULL"`
+	IsPregnant bool      `gorm:"default:false;NOT NULL"`
 	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
