@@ -89,8 +89,7 @@ func (r *repositoryUserCRUD) Update(id uint, user model.User) (int64, error) {
 			Email:     user.Email,
 			Password:  user.Password,
 			UpdatedAt: time.Time{},
-		},
-		)
+		})
 		ch <- true
 	}(done)
 	if channel.Ok(done) {
