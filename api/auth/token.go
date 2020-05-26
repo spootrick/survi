@@ -17,6 +17,7 @@ func GenerateJWT(user model.User) (string, error) {
 		User: user,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 1).Unix(),
+			IssuedAt:  time.Now().Unix(),
 			Issuer:    "Survi App",
 		},
 	}
